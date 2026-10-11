@@ -58,5 +58,13 @@ let b = buildPlans({
 console.log('   verdict:', b.verdict.line);
 ok('flags skip-metro when both ends far', b.verdict.tone === 'skip-metro');
 
+console.log('\nRanges: cab + auto always bracket a busy-time high end');
+let rg = buildPlans({ driving: { km: 21.8, min: 62 }, transit: null }, {}, 11, 0);
+const cabR = rg.options.find(o => o.key === 'cab');
+const autoR = rg.options.find(o => o.key === 'auto');
+ok('cab high end sits above the low', cabR.costHigh > cabR.cost);
+ok('auto high end sits above the low', autoR.costHigh > autoR.cost);
+ok('cab high ≈ 1.4x low', Math.abs(cabR.costHigh - cabR.cost * 1.4) <= 1);
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

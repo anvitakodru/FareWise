@@ -206,7 +206,6 @@ export default function Home() {
                       <div className="flags">
                         {o.isCheapest && <span className="flag cheap">cheapest</span>}
                         {o.isFastest && <span className="flag fast">fastest</span>}
-                        {o.surge && <span className="flag surge">surge likely</span>}
                       </div>
                     </div>
                     <div className="metrics">
@@ -251,9 +250,9 @@ export default function Home() {
       </details>
 
       <p className="foot">
-        <b>Times use live Google traffic.</b> Auto and metro fares use official Bangalore rates (autos add a 1.5× night
-        surcharge, 10pm–5am). The cab fare is an estimate, shown as a range when surge is likely (weekends, rush hour),
-        since live Uber/Ola prices aren't public.
+        <b>Times use live Google traffic.</b> Metro fare is exact; autos add a 1.5× night surcharge (10pm–5am). Cab and
+        auto are shown as a range — apps charge more when demand is high, and live surge isn't public, so the higher
+        number is a busy-time estimate, not a promise.
       </p>
 
       <p className="spite">
