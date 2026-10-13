@@ -117,6 +117,29 @@ function TimePicker({ value, onChange }) {
   );
 }
 
+function ThemeToggle() {
+  const [mode, setMode] = useState('light');
+  useEffect(() => {
+    let saved = null;
+    try { saved = localStorage.getItem('fw-theme'); } catch {}
+    const sys = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const m = saved === 'light' || saved === 'dark' ? saved : sys;
+    setMode(m);
+    if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+  }, []);
+  function toggle() {
+    const next = mode === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    setMode(next);
+    try { localStorage.setItem('fw-theme', next); } catch {}
+  }
+  return (
+    <button className="theme-toggle" type="button" onClick={toggle} aria-label="Switch between light and dark">
+      {mode === 'dark' ? '☀ Light' : '☾ Dark'}
+    </button>
+  );
+}
+
 export default function Home() {
   const [from, setFrom] = useState({ text: 'Koramangala 5th Block', placeId: null });
   const [to, setTo] = useState({ text: 'Whitefield, ITPL', placeId: null });
@@ -150,6 +173,7 @@ export default function Home() {
 
   return (
     <main className="wrap">
+      <div className="topbar"><ThemeToggle /></div>
       <h1>Should I metro it or just book a cab?</h1>
       <p className="sub">
         Stop juggling four apps to decide. FareWise works out <b>cab</b> vs <b>metro + auto</b> vs <b>full auto</b> and
