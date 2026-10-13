@@ -220,6 +220,9 @@ export default function Home() {
               </div>
             )}
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
+            {!result.options.some((o) => o.key === 'metro') && (
+              <div className="nometro">🚇 No metro for this trip — there's no line that connects these two ends, so it's auto vs cab.</div>
+            )}
             <div className="cards">
               {result.options.map((o) => {
                 const li = leaveInfo(o.min);
@@ -280,7 +283,10 @@ export default function Home() {
       </p>
 
       <p className="spite">
-        A spite-fueled weekend build. Not affiliated with anyone; numbers are best and educated guesses.
+        Not affiliated with anyone; numbers are best educated guesses. A spite-fueled weekend build by Anvita —{' '}
+        <a href="https://www.linkedin.com/in/anvitakodru/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        {' · '}
+        <a href="https://x.com/vitamaybe" target="_blank" rel="noopener noreferrer">X</a>
       </p>
     </main>
   );
