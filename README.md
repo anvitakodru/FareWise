@@ -1,56 +1,56 @@
 # FareWise
 
-Tells you the **cheapest vs fastest** way across Bangalore — cab, auto, or metro + auto — with the fare, the live-traffic time, and when to leave. It makes the call Google Maps won't: *is the metro actually worth it, or just cab it?*
+> Cab, auto, or metro? FareWise weighs cost and time, and makes the call so you don't open four apps to decide.
+
+**[Live demo](https://tryfarewise.vercel.app)**  ·  **[Architecture](architecture.md)**  ·  Bangalore only
+
+---
+
+## What is it
+
+FareWise answers one everyday Bangalore question: what is the cheapest and fastest way to get from A to B right now, by cab, by auto, or by metro plus a short auto or walk.
+
+The catch is always the last mile. The metro is cheap, but it leaves you a walk or an auto from the station at each end, and no app adds that up for you. Uber shows a cab, Ola shows a cab, Namma Metro shows a train, Google Maps shows routes, and you do the fare-versus-time math in your head. FareWise does that math. It pulls live traffic and metro routing from Google, works out the real fares including the access autos, and ranks your options with the cheapest and fastest flagged, plus when to leave. Google Maps handles the navigation. FareWise makes the decision.
 
 ## How it works
 
-- **Decision + fares** (`lib/plan.js`) — pure logic, unit-tested. Auto and metro fares are computed from standard Bangalore rates; the cab fare is an estimate.
-- **Live data** (`lib/google.js`) — Google Routes API gives real road distance, traffic-aware drive time, and the metro route (which station to board, where to get down). The key stays server-side.
-- **UI** (`app/page.jsx`) — type two places + an arrive-by time, get ranked options with a plan summary.
+1. **Enter your trip.** A start, a destination, and when you need to be there.
+2. **FareWise resolves it.** Google returns the road distance, live-traffic drive time, and the metro route (which station to board, where to change, where to get down).
+3. **It works out the money.** Auto and metro fares use official Bangalore rates, including the autos to and from the station. Cab and auto are shown as a range, since live app surge is not public.
+4. **You get a ranked answer.** Cab vs auto vs metro-plus-auto, each with its fare, door-to-door time, and a leave-by time. Cheapest and fastest are flagged. Tap through to Google Maps for directions.
 
-Google gives the *minutes*; this app gives the *money and the judgement*.
+## Why I built this
+
+No app compares across cab, auto, and metro, or prices in the last-mile autos that make or break the metro option. FareWise is the small tool that does, so the decision fits on one screen instead of four.
+
+It is also a portfolio piece: a real, shipped product built on live data, tested against actual Uber and auto fares, with honest handling of the one thing it cannot know, surge.
+
+## Tech stack
+
+- **Frontend:** Next.js 14 (App Router) and React 18
+- **Backend:** Node serverless API routes on Vercel, keeping the Google key off the browser
+- **Data & APIs:** Google Maps Platform (Routes API for traffic-aware driving and metro transit, Geocoding, and Places API New), plus computed Bangalore auto and metro fares
+- **Core logic:** a pure, unit-tested decision engine (`lib/plan.js`), separate from UI and network code
+
+See **[architecture.md](architecture.md)** for the request flow, the fare engine, and a component map.
 
 ## Run it locally
 
-1. **Install**
-   ```bash
-   npm install
-   ```
-2. **Add your Google key** — copy `.env.example` to `.env.local` and paste your key:
-   ```bash
-   cp .env.example .env.local
-   # then edit .env.local
-   ```
-3. **Start**
-   ```bash
-   npm run dev
-   ```
-   Open http://localhost:3000.
+```bash
+npm install
+cp .env.example .env.local   # add your GOOGLE_MAPS_API_KEY
+npm run dev                  # http://localhost:3000
+npm test                     # run the engine's unit tests
+```
 
-Run the logic tests any time with `npm test`.
+You need a Google Maps Platform key with **Routes**, **Geocoding**, and **Places (New)** enabled (billing on, which the free monthly credit covers). Deployed free on Vercel: add `GOOGLE_MAPS_API_KEY` as an environment variable, and every push auto-deploys.
 
-## Getting a Google Maps key (~5 min)
+## Known limits
 
-1. Go to https://console.cloud.google.com and sign in.
-2. Create a project (top bar → **New Project**).
-3. **Enable billing** (Billing → link a card). Google gives a monthly free credit that covers all your dev use — you won't be charged for testing, but a card is required.
-4. Enable three APIs: APIs & Services → Library → search and **Enable** each of:
-   - **Routes API** (traffic-aware routing)
-   - **Geocoding API** (fallback location lookup)
-   - **Places API (New)** (the type-ahead address suggestions)
-5. Create the key: APIs & Services → **Credentials** → Create credentials → **API key** → copy it.
-6. (Recommended) Restrict the key to the Directions API.
-7. Paste it into `.env.local` as `GOOGLE_MAPS_API_KEY`.
+- **Cab fare is an estimate.** Real Uber and Ola surge is not public, so the high end of the range is a best guess, not a promise.
+- **Metro parsing follows Google's transit route.** Unusual multi-transfer trips may label a line loosely.
+- Distances and fares are close enough to decide on, not billing-accurate.
 
-## Deploy (Vercel, free)
+---
 
-1. Push this repo to GitHub.
-2. Go to https://vercel.com, **Import** the repo.
-3. Add an environment variable `GOOGLE_MAPS_API_KEY` with your key.
-4. Deploy. You get a live URL.
-
-## Known limits (v1)
-
-- **Cab fare is an estimate** — real Uber/Ola surge isn't public, so it can run higher.
-- **Metro parsing** follows Google's transit route; odd multi-transfer trips may label the line loosely.
-- Distances/fares are "close enough to decide," not billing-accurate.
+Built by **Anvita**, a data engineer moving into product. FareWise started as a weekend build because deciding cab vs metro in Bangalore shouldn't take four apps and mental math. [LinkedIn](https://www.linkedin.com/in/anvitakodru/) · [X](https://x.com/vitamaybe)
