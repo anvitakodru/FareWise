@@ -9,7 +9,7 @@ function ok(name, cond) {
 
 console.log('\nfares (official Bangalore rates)');
 ok('metro 10km = ₹50', metroFare(10) === 50);
-ok('auto 2km = base ₹36', autoFare(2) === 36);
+ok('auto 2km = floor ₹50 (short-hop minimum)', autoFare(2) === 50);
 ok('auto 10km = 36 + 8*18 = ₹180', autoFare(10) === 180);
 
 console.log('\nKoramangala → Whitefield, daytime 9am (peak)');

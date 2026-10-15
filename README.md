@@ -10,7 +10,7 @@
 
 FareWise answers one everyday Bangalore question: what is the cheapest and fastest way to get from A to B right now, by cab, by auto, or by metro plus a short auto or walk.
 
-The catch is always the last mile. The metro is cheap, but it leaves you a walk or an auto from the station at each end, and no app adds that up for you. Uber shows a cab, Ola shows a cab, Namma Metro shows a train, Google Maps shows routes, and you do the fare-versus-time math in your head. FareWise does that math. It pulls live traffic and metro routing from Google, works out the real fares including the access autos, and ranks your options with the cheapest and fastest flagged, plus when to leave. Google Maps handles the navigation. FareWise makes the decision.
+The catch is always the last mile: the metro is cheap, but there's a walk or an auto from the station at each end, and no app adds that up. Each app shows only its own option and leaves the cost-versus-time math to you. FareWise does that math across all three with live Google data, and tells you which is cheapest, which is fastest, and when to leave. Google Maps still handles the navigation; FareWise makes the call.
 
 ## How it works
 

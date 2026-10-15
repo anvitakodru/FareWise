@@ -242,7 +242,7 @@ export default function Home() {
                         ? <div className="metric"><div className="n leave">{li.t}</div><div className="k">leave by</div></div>
                         : <div className="metric"><div className="n late">leave now</div><div className="k">reach ~{li.t}{li.late > 0 ? ` · ${li.late}m late` : ''}</div></div>}
                     </div>
-                    {o.fareBreakdown && <div className="breakdown"><b>₹{o.fareBreakdown.metro}</b> metro + <b>₹{o.fareBreakdown.autos}</b> autos <span className="km">(est.)</span></div>}
+                    {o.fareBreakdown && <div className="breakdown"><b>₹{o.fareBreakdown.metro}</b> metro + <b>₹{o.fareBreakdown.autos}{o.fareBreakdown.autosHigh ? `–${o.fareBreakdown.autosHigh}` : ''}</b> autos <span className="km">(est.)</span></div>}
                     <div className="steps">
                       {o.steps.map((s, i) => (
                         <div key={i} className={`step ${s.mode}`}>
