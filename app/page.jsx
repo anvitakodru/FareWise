@@ -141,8 +141,8 @@ function ThemeToggle() {
 }
 
 export default function Home() {
-  const [from, setFrom] = useState({ text: 'Koramangala 5th Block', placeId: null });
-  const [to, setTo] = useState({ text: 'Whitefield, ITPL', placeId: null });
+  const [from, setFrom] = useState({ text: '', placeId: null });
+  const [to, setTo] = useState({ text: '', placeId: null });
   const [arriveBy, setArriveBy] = useState('09:00');
   const [rates, setRates] = useState({ autoBase: 36, autoPerKm: 18, cabBase: 120, cabPerKm: 9, cabMinFare: 90 });
   const [loading, setLoading] = useState(false);
