@@ -53,4 +53,4 @@ You need a Google Maps Platform key with **Routes**, **Geocoding**, and **Places
 
 ---
 
-Built by **Anvita**, a data engineer moving into product. FareWise started as a weekend build because deciding cab vs metro in Bangalore shouldn't take four apps and mental math. [LinkedIn](https://www.linkedin.com/in/anvitakodru/) · [X](https://x.com/vitamaybe)
+Built by **Anvita**, as a weekend side-project because deciding cab vs metro in Bangalore shouldn't take four apps and mental math. [LinkedIn](https://www.linkedin.com/in/anvitakodru/) · [X](https://x.com/vitamaybe)
