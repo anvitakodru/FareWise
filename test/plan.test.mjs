@@ -9,7 +9,7 @@ function ok(name, cond) {
 
 console.log('\nfares (official Bangalore rates)');
 ok('metro 10km = ₹50', metroFare(10) === 50);
-ok('auto 2km = floor ₹50 (short-hop minimum)', autoFare(2) === 50);
+ok('auto 2km = floor ₹55 (short-hop minimum)', autoFare(2) === 55);
 ok('auto 10km = 36 + 8*18 = ₹180', autoFare(10) === 180);
 
 console.log('\nKoramangala → Whitefield, daytime 9am (peak)');
@@ -29,14 +29,15 @@ ok('metro option exists', r.options.some(o => o.key === 'metro'));
 ok('metro is cheapest here', r.cheapest.key === 'metro');
 ok('metro beats 70-min cab on time', r.options.find(o => o.key === 'metro').min < 74);
 
-console.log('\nNight flip: same short trip at 11pm — auto surcharge should bite');
+console.log('\nNight: calm (low) price holds, only the high end widens');
 let day = buildPlans({ driving: { km: 12, min: 30 }, transit: null }, {}, 14);
 let night = buildPlans({ driving: { km: 12, min: 30 }, transit: null }, {}, 23);
-const dayAuto = day.options.find(o => o.key === 'auto').cost;
-const nightAuto = night.options.find(o => o.key === 'auto').cost;
-console.log(`   auto day ₹${dayAuto} → night ₹${nightAuto}`);
-ok('night auto is 1.5x day auto', Math.abs(nightAuto - dayAuto * 1.5) <= 1);
-ok('night marks auto estimate as inexact', night.timeOfDay.night === true);
+const dayAuto = day.options.find(o => o.key === 'auto');
+const nightAuto = night.options.find(o => o.key === 'auto');
+console.log(`   auto day ₹${dayAuto.cost}–${dayAuto.costHigh} → night ₹${nightAuto.cost}–${nightAuto.costHigh}`);
+ok('night auto low == day low (calm price holds)', nightAuto.cost === dayAuto.cost);
+ok('night auto high > day high (nights can run higher)', nightAuto.costHigh > dayAuto.costHigh);
+ok('night is flagged', night.timeOfDay.night === true);
 
 console.log('\nShort hop ~3km, no metro route passed (both near nothing)');
 let s = buildPlans({ driving: { km: 3.0, min: 14 }, transit: null }, {}, 14);
