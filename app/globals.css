@@ -131,3 +131,4 @@ details[open] summary::after{content:'done ▴'}
 .nometro{margin:0 0 14px;padding:11px 14px;border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--muted);font-size:.86rem;line-height:1.5}
 .spite a{color:var(--accent);text-decoration:none;font-style:normal;font-weight:600}
 .spite a:hover{text-decoration:underline}
+.rain{margin:0 0 14px;padding:11px 14px;border:1px solid var(--fast);background:var(--fast-bg);color:var(--fast);border-radius:12px;font-size:.88rem;font-weight:500;line-height:1.5}

@@ -220,6 +220,9 @@ export default function Home() {
               </div>
             )}
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
+            {result.rain && result.rain.raining && (
+              <div className="rain">🌧 Raining at pickup — cab and auto are running higher{result.rain.heavy ? ' (heavy rain)' : ''}. The range leans up to match.</div>
+            )}
             {!result.options.some((o) => o.key === 'metro') && (
               <div className="nometro">🚇 No metro for this trip — there's no line that connects these two ends, so it's auto vs cab.</div>
             )}

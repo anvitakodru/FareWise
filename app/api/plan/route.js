@@ -38,6 +38,7 @@ export async function POST(req) {
       destination: trip.destText,
       roadKm: trip.driving.km,
       arriveBy: arriveByUnix,
+      rain: trip.rain || null,
       ...result,
     });
   } catch (e) {
