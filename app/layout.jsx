@@ -2,7 +2,7 @@ import './globals.css';
 
 export const metadata = {
   title: 'FareWise',
-  description: 'Bangalore commute decision tool — cheapest vs fastest across cab, auto, and metro, with live traffic.',
+  description: 'Bangalore commute decision tool: cheapest vs fastest across cab, auto, and metro, with live traffic.',
 };
 
 export default function RootLayout({ children }) {

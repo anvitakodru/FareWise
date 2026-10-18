@@ -1,4 +1,4 @@
-# FareWise — Architecture
+# FareWise Architecture
 
 How two addresses and a time become a ranked cab / auto / metro answer.
 
@@ -8,7 +8,7 @@ FareWise has no login and no database. It is a stateless Next.js app: the browse
 
 ```mermaid
 flowchart LR
-    B["Browser — Next.js UI<br/>(app/page.jsx)"] -->|"POST /api/plan"| V["Vercel serverless<br/>API routes"]
+    B["Browser: Next.js UI<br/>(app/page.jsx)"] -->|"POST /api/plan"| V["Vercel serverless<br/>API routes"]
     V --> E["Decision engine<br/>(lib/plan.js, pure)"]
     V -->|"HTTPS, server-side key"| GM["Google Maps Platform"]
     GM --> GEO["Geocoding + Places (New)"]
@@ -55,10 +55,10 @@ Pure functions, no UI and no network, so it is unit-tested on its own (`test/pla
 For each trip it builds up to three options and ranks them:
 
 - **Cab, door to door.** A base fare plus a per-km rate, shown as a low-to-high range: the low end is the calm-conditions price, the high end leaves room for surge, since real app surge is not public.
-- **Auto, door to door.** Bangalore meter rates, but short hops are floored to what an app auto actually charges — the bare meter undershoots a 2 km ride. Shown as a range too: the low end holds the calm price day or night, and the high end widens late at night, since app autos are demand-priced rather than paying a fixed night surcharge.
-- **Metro + auto.** Metro fare from the distance bands (fixed — it never surges), plus the access legs: an auto to and from the station, or a free walk when a station is within ~800 m. Multi-line trips show each leg and the interchange.
+- **Auto, door to door.** Bangalore meter rates, but short hops are floored to what an app auto actually charges, since the bare meter undershoots a 2 km ride. Shown as a range too: the low end holds the calm price day or night, and the high end widens late at night, since app autos are demand-priced rather than paying a fixed night surcharge.
+- **Metro + auto.** Metro fare from the distance bands (fixed, it never surges), plus the access legs: an auto to and from the station, or a free walk when a station is within ~800 m. Multi-line trips show each leg and the interchange.
 
-Three live signals shift the cab and auto ranges (never the fixed metro fare): the driving time uses Google's predicted traffic for the arrive-by time (and live traffic when that is near-now); late night widens the high end; and live rain at the pickup, from Open-Meteo, leans the whole range up with a flag, since rain is a strong surge driver. None of these claim a precise surge price — they bracket it.
+Three live signals shift the cab and auto ranges (never the fixed metro fare): the driving time uses Google's predicted traffic for the arrive-by time (and live traffic when that is near-now); late night widens the high end; and live rain at the pickup, from Open-Meteo, leans the whole range up with a flag, since rain is a strong surge driver. None of these claim a precise surge price. They bracket it.
 
 It then flags the **cheapest** and the **fastest**, computes a **leave-by** time from the arrive-by target and the door-to-door minutes, and writes a one-line **verdict** (for example, take the metro when it is clearly cheaper and barely slower, or skip it when the access autos cancel the saving). When no metro route applies, it says so instead of dropping the option silently.
 

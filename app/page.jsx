@@ -219,10 +219,10 @@ export default function Home() {
             )}
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
             {result.rain && result.rain.raining && (
-              <div className="rain">🌧 Raining at pickup — cab and auto are running higher{result.rain.heavy ? ' (heavy rain)' : ''}. The range leans up to match.</div>
+              <div className="rain">🌧 Raining at pickup. Cab and auto are running higher{result.rain.heavy ? ' (heavy rain)' : ''}. The range leans up to match.</div>
             )}
             {!result.options.some((o) => o.key === 'metro') && !result.metroClosed && (
-              <div className="nometro">🚇 No metro for this trip — there's no line that connects these two ends, so it's auto vs cab.</div>
+              <div className="nometro">🚇 No metro for this trip. There's no line that connects these two ends, so it's auto vs cab.</div>
             )}
             <div className="cards">
               {result.options.map((o) => {

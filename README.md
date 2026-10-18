@@ -44,7 +44,7 @@ cp .env.example .env.local   # add a Google Maps key (Routes, Geocoding, Places 
 npm run dev                  # http://localhost:3000
 ```
 
-Run `npm test` for the engine's unit tests. You'll need a Google Maps Platform key — the free monthly credit covers dev use. Deployed free on Vercel with `GOOGLE_MAPS_API_KEY` as an env var; every push auto-deploys.
+Run `npm test` for the engine's unit tests. You'll need a Google Maps Platform key. The free monthly credit covers dev use. Deployed free on Vercel with `GOOGLE_MAPS_API_KEY` as an env var; every push auto-deploys.
 
 ## Known limits
 
