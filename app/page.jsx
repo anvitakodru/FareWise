@@ -267,9 +267,9 @@ export default function Home() {
       })()}
 
       <p className="foot">
-        <b>Times use live Google traffic.</b> Metro fare is exact; autos add a 1.5× night surcharge (10pm–5am). Cab and
-        auto are shown as a range. Apps charge more when demand is high, and live surge isn't public, so the higher
-        number is a busy-time estimate, not a promise.
+        <b>Times use live Google traffic.</b> Metro fare is exact. Cab and auto are shown as a range: the low end is the
+        calm price, the high end leaves room for surge, which runs higher late at night or when it is raining. Live app
+        surge isn't public, so the higher number is a busy-time estimate, not a promise.
       </p>
 
       <p className="spite">
