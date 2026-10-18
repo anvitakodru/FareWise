@@ -34,16 +34,17 @@ It is also a portfolio piece: a real, shipped product built on live data, tested
 
 See **[architecture.md](architecture.md)** for the request flow, the fare engine, and a component map.
 
-## Run it locally
+## Quick start
 
 ```bash
+git clone https://github.com/anvitakodru/FareWise.git
+cd FareWise
 npm install
-cp .env.example .env.local   # add your GOOGLE_MAPS_API_KEY
+cp .env.example .env.local   # add a Google Maps key (Routes, Geocoding, Places New)
 npm run dev                  # http://localhost:3000
-npm test                     # run the engine's unit tests
 ```
 
-You need a Google Maps Platform key with **Routes**, **Geocoding**, and **Places (New)** enabled (billing on, which the free monthly credit covers). Deployed free on Vercel: add `GOOGLE_MAPS_API_KEY` as an environment variable, and every push auto-deploys.
+Run `npm test` for the engine's unit tests. You'll need a Google Maps Platform key — the free monthly credit covers dev use. Deployed free on Vercel with `GOOGLE_MAPS_API_KEY` as an env var; every push auto-deploys.
 
 ## Known limits
 
