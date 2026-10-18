@@ -16,7 +16,7 @@ The catch is always the last mile: the metro is cheap, but there's a walk or an 
 
 1. **Enter your trip.** A start, a destination, and when you need to be there.
 2. **FareWise resolves it.** Google returns the road distance, live-traffic drive time, and the metro route (which station to board, where to change, where to get down).
-3. **It works out the money.** Auto and metro fares use official Bangalore rates, including the autos to and from the station. Cab and auto are shown as a range, since live app surge is not public.
+3. **It works out the money.** Auto and metro fares use real Bangalore rates, including the autos to and from the station. Cab and auto are shown as a range that leans higher late at night or when it is raining at the pickup, since live app surge is not public.
 4. **You get a ranked answer.** Cab vs auto vs metro-plus-auto, each with its fare, door-to-door time, and a leave-by time. Cheapest and fastest are flagged. Tap through to Google Maps for directions.
 
 ## Why I built this
@@ -29,7 +29,7 @@ It is also a portfolio piece: a real, shipped product built on live data, tested
 
 - **Frontend:** Next.js 14 (App Router) and React 18
 - **Backend:** Node serverless API routes on Vercel, keeping the Google key off the browser
-- **Data & APIs:** Google Maps Platform (Routes API for traffic-aware driving and metro transit, Geocoding, and Places API New), plus computed Bangalore auto and metro fares
+- **Data & APIs:** Google Maps Platform (Routes API for traffic-aware driving and metro transit, Geocoding, and Places API New), Open-Meteo for live rain at the pickup, plus computed Bangalore auto and metro fares
 - **Core logic:** a pure, unit-tested decision engine (`lib/plan.js`), separate from UI and network code
 
 See **[architecture.md](architecture.md)** for the request flow, the fare engine, and a component map.

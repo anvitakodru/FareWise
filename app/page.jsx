@@ -144,7 +144,6 @@ export default function Home() {
   const [from, setFrom] = useState({ text: '', placeId: null });
   const [to, setTo] = useState({ text: '', placeId: null });
   const [arriveBy, setArriveBy] = useState('09:00');
-  const [rates, setRates] = useState({ autoBase: 36, autoPerKm: 18, cabBase: 120, cabPerKm: 9, cabMinFare: 90 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -159,7 +158,7 @@ export default function Home() {
         body: JSON.stringify({
           origin: from.text, originPlaceId: from.placeId,
           destination: to.text, destPlaceId: to.placeId,
-          arriveBy, rates,
+          arriveBy,
         }),
       });
       const data = await res.json();
@@ -169,7 +168,6 @@ export default function Home() {
     finally { setLoading(false); }
   }
 
-  const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: parseFloat(e.target.value) || 0 }));
 
   return (
     <main className="wrap">
@@ -267,17 +265,6 @@ export default function Home() {
           </>
         );
       })()}
-
-      <details>
-        <summary>Fares used (tweak if yours differ)</summary>
-        <div className="assume">
-          <div className="arow"><span>Auto base<small>first 2 km · official ₹36</small></span><input type="number" value={rates.autoBase} onChange={setRate('autoBase')} /></div>
-          <div className="arow"><span>Auto per km<small>after 2 km · official ₹18</small></span><input type="number" value={rates.autoPerKm} onChange={setRate('autoPerKm')} /></div>
-          <div className="arow"><span>Cab base<small>fixed start — cabs charge high base, low per-km</small></span><input type="number" value={rates.cabBase} onChange={setRate('cabBase')} /></div>
-          <div className="arow"><span>Cab per km</span><input type="number" value={rates.cabPerKm} onChange={setRate('cabPerKm')} /></div>
-          <div className="arow"><span>Cab minimum fare</span><input type="number" value={rates.cabMinFare} onChange={setRate('cabMinFare')} /></div>
-        </div>
-      </details>
 
       <p className="foot">
         <b>Times use live Google traffic.</b> Metro fare is exact; autos add a 1.5× night surcharge (10pm–5am). Cab and
