@@ -132,7 +132,7 @@ details[open] summary::after{content:'done ▴'}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;position:relative;z-index:1}
 .brand{font-weight:800;font-size:1.4rem;letter-spacing:-.015em;color:var(--fg)}
 .brand .w{color:var(--accent)}
-.route-bg{position:absolute;top:0;left:-16px;width:calc(100% + 32px);height:auto;z-index:0;pointer-events:none}
+.route-bg{position:absolute;top:0;left:0;width:100%;height:auto;z-index:0;pointer-events:none}
 .wrap>h1,.panel{position:relative;z-index:1}
 .theme-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--b);font-size:.8rem;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
 .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
