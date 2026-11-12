@@ -199,8 +199,8 @@ export default function Home() {
 
       <form className="panel" onSubmit={plan}>
         <div className="grid">
-          <AddressInput id="from" label="From" value={from} onChange={setFrom} placeholder="Start typing an area or landmark" />
-          <AddressInput id="to" label="To" value={to} onChange={setTo} placeholder="Start typing an area or landmark" />
+          <AddressInput id="from" label="From" value={from} onChange={setFrom} placeholder="Pickup address or place" />
+          <AddressInput id="to" label="To" value={to} onChange={setTo} placeholder="Drop address or place" />
           <div className="field full">
             <label>Need to be there by</label>
             <TimePicker value={arriveBy} onChange={setArriveBy} />
