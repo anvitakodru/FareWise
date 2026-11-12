@@ -1,7 +1,7 @@
 :root{
   /* Light: auto-yellow & ink */
   --bg:#FBF9F4; --surface:#FFFFFF; --surface-2:#F2EEE4;
-  --fg:#1A1A1A; --muted:#6B6456; --line:#E4DECF;
+  --fg:#1A1A1A; --muted:#6B6456; --muted2:#4A4536; --line:#E4DECF;
   --accent:#A86B00; --accent-ink:#1A1A1A;
   --btn:#F4B400; --btn-ink:#1A1A1A;
   --cheap:#1F7A4D; --cheap-bg:#E6F2EA;
@@ -16,7 +16,7 @@
 /* Dark: ink & amber. Used when the OS is dark (unless the viewer forced light)... */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#14161A; --surface:#1C1F25; --surface-2:#23272E;
-  --fg:#ECEEF2; --muted:#8C94A2; --line:#2B2F38;
+  --fg:#ECEEF2; --muted:#8C94A2; --muted2:#B2B9C5; --line:#2B2F38;
   --accent:#E8A13C; --accent-ink:#14161A;
   --btn:#E8A13C; --btn-ink:#14161A;
   --cheap:#3FA66B; --cheap-bg:#15261C;
@@ -28,7 +28,7 @@
 /* ...and when the viewer flips the toggle to dark. */
 :root[data-theme="dark"]{
   --bg:#14161A; --surface:#1C1F25; --surface-2:#23272E;
-  --fg:#ECEEF2; --muted:#8C94A2; --line:#2B2F38;
+  --fg:#ECEEF2; --muted:#8C94A2; --muted2:#B2B9C5; --line:#2B2F38;
   --accent:#E8A13C; --accent-ink:#14161A;
   --btn:#E8A13C; --btn-ink:#14161A;
   --cheap:#3FA66B; --cheap-bg:#15261C;
@@ -43,9 +43,9 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--b);line-height:1.5;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
 
-.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:28px 48px}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;position:relative}
 h1{font-family:var(--d);font-weight:700;font-size:clamp(1.9rem,6vw,2.6rem);letter-spacing:-.02em;margin:0;line-height:1.02;text-wrap:balance}
-.sub{color:var(--muted);margin:.5rem 0 0;font-size:.98rem;max-width:54ch}
+.sub{color:var(--muted2);margin:.5rem 0 0;font-size:1rem;line-height:1.55;max-width:54ch;position:relative;z-index:1}
 .sub b{color:var(--accent);font-weight:600}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-top:22px}
@@ -119,13 +119,19 @@ details[open] summary::after{content:'done ▴'}
 .arow small{color:var(--muted);display:block;font-size:.76rem}
 .arow input{width:84px;font-family:var(--m);text-align:right;font-variant-numeric:tabular-nums}
 
-.foot{color:var(--muted);font-size:.8rem;margin-top:20px;line-height:1.55}
+.foot{color:var(--muted);font-size:.82rem;margin-top:26px;line-height:1.7;border-top:1px solid var(--line);padding-top:18px}
 .foot b{color:var(--fg);font-weight:600}
-.spite{color:var(--muted);font-size:.78rem;margin-top:14px;line-height:1.5;opacity:.75;font-style:italic}
+.fineprint{color:var(--muted);font-size:.72rem;margin-top:14px;line-height:1.5;opacity:.8}
+.spite{color:var(--muted2);font-size:.9rem;margin-top:6px;line-height:1.55;font-weight:500}
+.spite .name{color:var(--fg);font-weight:700}
 @media (max-width:420px){.metrics{gap:16px}.metric .n{font-size:1.3rem}}
 
 /* light/dark toggle */
-.topbar{display:flex;justify-content:flex-end;margin-bottom:2px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;position:relative;z-index:1}
+.brand{font-weight:800;font-size:1.4rem;letter-spacing:-.015em;color:var(--fg)}
+.brand .w{color:var(--accent)}
+.route-bg{position:absolute;top:0;left:0;right:0;height:240px;z-index:0;pointer-events:none}
+.wrap>h1,.panel{position:relative;z-index:1}
 .theme-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--b);font-size:.8rem;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
 .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
 .nometro{margin:0 0 14px;padding:11px 14px;border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--muted);font-size:.86rem;line-height:1.5}

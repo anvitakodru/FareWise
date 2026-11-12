@@ -171,7 +171,21 @@ export default function Home() {
 
   return (
     <main className="wrap">
-      <div className="topbar"><ThemeToggle /></div>
+      <svg className="route-bg" viewBox="0 0 600 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M60 176 C 170 130, 220 160, 300 95 S 460 55, 512 70" fill="none" stroke="var(--accent)" strokeWidth="1.4" strokeDasharray="2 8" opacity="0.22" />
+        <g opacity="0.2" transform="translate(60,176) scale(0.6)">
+          <path d="M0 0 C -6 -10 -8 -13 -8 -18 a8 8 0 0 1 16 0 c0 5 -2 8 -8 18 z" fill="var(--accent)" />
+          <circle cx="0" cy="-18" r="3" fill="var(--bg)" />
+        </g>
+        <g opacity="0.2" transform="translate(512,70) scale(0.6)">
+          <path d="M0 0 C -6 -10 -8 -13 -8 -18 a8 8 0 0 1 16 0 c0 5 -2 8 -8 18 z" fill="var(--accent)" />
+          <circle cx="0" cy="-18" r="3" fill="var(--bg)" />
+        </g>
+      </svg>
+      <div className="topbar">
+        <span className="brand">Fare<span className="w">Wise</span></span>
+        <ThemeToggle />
+      </div>
       <h1>Should I metro it or just book a cab?</h1>
       <p className="sub">
         Stop juggling four apps to decide. FareWise works out <b>cab</b> vs <b>metro + auto</b> vs <b>full auto</b> and
@@ -267,13 +281,14 @@ export default function Home() {
       })()}
 
       <p className="foot">
-        <b>Times use live Google traffic.</b> Metro fare is exact. Cab and auto are shown as a range: the low end is the
-        calm price, the high end leaves room for surge, which runs higher late at night or when it is raining. Live app
-        surge isn't public, so the higher number is a busy-time estimate, not a promise.
+        <b>Times use live Google traffic.</b> Metro fares are exact. Cab and auto show a range: the low end is a normal
+        fare, the high end covers busy times, nights and rain. Live app surge isn't public, so the high number is a
+        guess, not a promise.
       </p>
 
+      <p className="fineprint">Not affiliated with anyone. Numbers are best educated guesses.</p>
       <p className="spite">
-        Not affiliated with anyone; numbers are best educated guesses. A spite-fueled weekend build by Anvita ·{' '}
+        A spite-fueled weekend build by <b className="name">Anvita</b> ·{' '}
         <a href="https://www.linkedin.com/in/anvitakodru/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         {' · '}
         <a href="https://x.com/vitamaybe" target="_blank" rel="noopener noreferrer">X</a>
