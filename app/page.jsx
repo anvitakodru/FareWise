@@ -243,6 +243,9 @@ export default function Home() {
             {!result.options.some((o) => o.key === 'metro') && !result.metroClosed && (
               <div className="nometro">🚇 No metro for this trip. There's no line that connects these two ends, so it's auto vs cab.</div>
             )}
+            {result.roadKm >= 18 && (
+              <div className="nometro">🛺 Long trip: app autos get demand-priced on routes this long, so the real fare can swing beyond this range, up or down.</div>
+            )}
             <div className="cards">
               {result.options.map((o) => {
                 const li = leaveInfo(o.min);
