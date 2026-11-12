@@ -189,7 +189,8 @@ export default function Home() {
       <h1>Should I metro it or just book a cab?</h1>
       <p className="sub">
         Stop juggling four apps to decide. FareWise works out <b>cab</b> vs <b>metro + auto</b> vs <b>full auto</b> and
-        helps you pick your best option. Bangalore only.
+        helps you pick your best option.{' '}
+        <span className="pin-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z" /><circle cx="12" cy="11" r="1.6" fill="currentColor" stroke="none" /></svg>Bangalore only</span>
       </p>
 
       <form className="panel" onSubmit={plan}>

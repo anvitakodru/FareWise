@@ -47,6 +47,8 @@ img{max-width:100%}
 h1{font-family:var(--b);font-weight:700;font-size:clamp(1.9rem,6vw,2.6rem);letter-spacing:-.02em;margin:0;line-height:1.05;text-wrap:balance}
 .sub{color:var(--muted2);margin:.85rem 0 0;font-size:1rem;line-height:1.55;max-width:54ch;position:relative;z-index:1}
 .sub b{color:var(--accent);font-weight:600}
+.pin-pill{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;font-weight:600;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:1px 9px 1px 7px;white-space:nowrap;vertical-align:middle}
+.pin-pill svg{width:11px;height:11px}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-top:22px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
