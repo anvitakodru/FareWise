@@ -70,9 +70,11 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .go{grid-column:1/-1;font-family:var(--b);font-weight:600;font-size:1rem;background:var(--btn);color:var(--btn-ink);border:none;border-radius:10px;padding:13px;cursor:pointer;margin-top:2px}
 .go:disabled{opacity:.6;cursor:progress}
 
-.verdict{margin:26px 0 6px;font-family:var(--d);font-size:1.15rem;font-weight:600;text-wrap:balance}
-.verdict.take-metro,.verdict .hl{color:var(--accent)}
-.verdict.skip-metro{color:var(--fast)}
+.yourcall{margin:26px 0 16px;border:1px solid color-mix(in srgb, var(--accent) 38%, transparent);background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-radius:14px;padding:14px 16px}
+.yourcall.skip-metro{border-color:color-mix(in srgb, var(--fast) 38%, transparent);background:color-mix(in srgb, var(--fast) 8%, var(--surface))}
+.yc-lab{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:7px}
+.yourcall.skip-metro .yc-lab{color:var(--fast)}
+.yc-line{margin:0;font-family:var(--d);font-size:1.15rem;font-weight:600;line-height:1.32;text-wrap:balance}
 .route-line{color:var(--muted);font-size:.9rem;margin:0 0 14px;word-break:break-word}
 .heads{margin:0 0 14px;padding:11px 14px;border:1px solid var(--fast);background:var(--fast-bg);color:var(--fast);border-radius:10px;font-size:.9rem;font-weight:500}
 .maps-link{color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
@@ -93,6 +95,11 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .flag.cheap{color:var(--cheap);background:var(--cheap-bg)}
 .flag.fast{color:var(--speed);background:var(--speed-bg)}
 .flag.surge{color:var(--fast);background:var(--fast-bg)}
+.flag.alt{color:var(--muted);background:var(--surface-2)}
+.cmp{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:.86rem;color:var(--muted2);line-height:1.5}
+.cmp b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+.tagline{text-align:center;color:var(--muted);font-size:.82rem;margin:16px 0 0}
+.tagline b{color:var(--fg);font-weight:600}
 .est.surge-note{color:var(--fast)}
 .metrics{display:flex;gap:22px;margin-top:12px;flex-wrap:wrap}
 .metric .n{font-family:var(--m);font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
