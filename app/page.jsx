@@ -1,7 +1,18 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 
-const ICON = { walk: '🚶', auto: '🛺', metro: '🚇', cab: '🚕' };
+const ICON = { walk: '🚶', auto: '🛺', metro: '🚇', cab: '🚕', change: '🔁' };
+
+// Bangalore metro line colours, the way the metro map shows them.
+const LINE_COLORS = {
+  green: ['#12883f', '#fff'], purple: ['#7b2fbe', '#fff'], yellow: ['#f4c20d', '#1a1a1a'],
+  blue: ['#1a73e8', '#fff'], pink: ['#d81b60', '#fff'], red: ['#d93025', '#fff'], orange: ['#e8710a', '#fff'],
+};
+function lineStyle(name = '') {
+  const k = Object.keys(LINE_COLORS).find((c) => name.toLowerCase().includes(c));
+  const [bg, fg] = LINE_COLORS[k] || ['#5a6a63', '#fff'];
+  return { background: bg, color: fg };
+}
 
 function clock(unixSec) {
   const d = new Date(unixSec * 1000);
@@ -79,11 +90,64 @@ function AddressInput({ id, label, value, onChange, placeholder }) {
   );
 }
 
+const MINUTES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+function TimePicker({ value, onChange }) {
+  const [h24, m] = value.split(':').map(Number);
+  const ap = h24 < 12 ? 'AM' : 'PM';
+  const h12 = h24 % 12 || 12;
+  const mm = MINUTES.includes(m) ? m : 0;
+  function set(nh12, nm, nap) {
+    let H = nh12 % 12;
+    if (nap === 'PM') H += 12;
+    onChange(`${String(H).padStart(2, '0')}:${String(nm).padStart(2, '0')}`);
+  }
+  return (
+    <div className="timepick">
+      <select aria-label="Hour" value={h12} onChange={(e) => set(+e.target.value, mm, ap)}>
+        {[12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((x) => <option key={x} value={x}>{x}</option>)}
+      </select>
+      <span>:</span>
+      <select aria-label="Minute" value={mm} onChange={(e) => set(h12, +e.target.value, ap)}>
+        {MINUTES.map((x) => <option key={x} value={x}>{String(x).padStart(2, '0')}</option>)}
+      </select>
+      <select aria-label="AM or PM" value={ap} onChange={(e) => set(h12, mm, e.target.value)}>
+        <option>AM</option><option>PM</option>
+      </select>
+    </div>
+  );
+}
+
+function ThemeToggle() {
+  const [mode, setMode] = useState('light');
+  useEffect(() => {
+    let saved = null;
+    try { saved = localStorage.getItem('fw-theme'); } catch {}
+    const sys = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const m = saved === 'light' || saved === 'dark' ? saved : sys;
+    setMode(m);
+    if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+  }, []);
+  function toggle() {
+    const next = mode === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    setMode(next);
+    try { localStorage.setItem('fw-theme', next); } catch {}
+  }
+  return (
+    <button className="theme-toggle" type="button" onClick={toggle} aria-label="Switch between light and dark">
+      {mode === 'dark' ? (
+        <><svg className="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>Light</>
+      ) : (
+        <><svg className="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z" /></svg>Dark</>
+      )}
+    </button>
+  );
+}
+
 export default function Home() {
-  const [from, setFrom] = useState({ text: 'Koramangala 5th Block', placeId: null });
-  const [to, setTo] = useState({ text: 'Whitefield, ITPL', placeId: null });
+  const [from, setFrom] = useState({ text: '', placeId: null });
+  const [to, setTo] = useState({ text: '', placeId: null });
   const [arriveBy, setArriveBy] = useState('09:00');
-  const [rates, setRates] = useState({ autoBase: 36, autoPerKm: 18, cabBase: 40, cabPerKm: 13, cabMinFare: 60 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -98,7 +162,7 @@ export default function Home() {
         body: JSON.stringify({
           origin: from.text, originPlaceId: from.placeId,
           destination: to.text, destPlaceId: to.placeId,
-          arriveBy, rates,
+          arriveBy,
         }),
       });
       const data = await res.json();
@@ -108,26 +172,41 @@ export default function Home() {
     finally { setLoading(false); }
   }
 
-  const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: parseFloat(e.target.value) || 0 }));
 
   return (
     <main className="wrap">
+      <svg className="route-bg" viewBox="0 0 600 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M60 176 C 170 130, 220 160, 300 95 S 460 55, 512 70" fill="none" stroke="var(--accent)" strokeWidth="1.4" strokeDasharray="2 8" opacity="0.22" />
+        <g opacity="0.2" transform="translate(60,176) scale(0.6)">
+          <path d="M0 0 C -6 -10 -8 -13 -8 -18 a8 8 0 0 1 16 0 c0 5 -2 8 -8 18 z" fill="var(--accent)" />
+          <circle cx="0" cy="-18" r="3" fill="var(--bg)" />
+        </g>
+        <g opacity="0.2" transform="translate(512,70) scale(0.6)">
+          <path d="M0 0 C -6 -10 -8 -13 -8 -18 a8 8 0 0 1 16 0 c0 5 -2 8 -8 18 z" fill="var(--accent)" />
+          <circle cx="0" cy="-18" r="3" fill="var(--bg)" />
+        </g>
+      </svg>
+      <div className="topbar">
+        <span className="brand">Fare<span className="w">Wise</span></span>
+        <ThemeToggle />
+      </div>
       <h1>Should I metro it or just book a cab?</h1>
       <p className="sub">
-        Where you're going and by when. It works out <b>cab</b> vs <b>metro + auto</b> vs{' '}
-        <b>full auto</b> — the fare, the time with live traffic, and when to leave. Bangalore only.
+        Stop juggling four apps to decide. FareWise works out <b>cab</b> vs <b>metro + auto</b> vs <b>full auto</b> and
+        helps you pick your best option.{' '}
+        <span className="pin-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z" /><circle cx="12" cy="11" r="1.6" fill="currentColor" stroke="none" /></svg>Bangalore only</span>
       </p>
 
       <form className="panel" onSubmit={plan}>
         <div className="grid">
-          <AddressInput id="from" label="From" value={from} onChange={setFrom} placeholder="Start typing an area or landmark" />
-          <AddressInput id="to" label="To" value={to} onChange={setTo} placeholder="Start typing an area or landmark" />
+          <AddressInput id="from" label="From" value={from} onChange={setFrom} placeholder="Pickup address or place" />
+          <AddressInput id="to" label="To" value={to} onChange={setTo} placeholder="Drop address or place" />
           <div className="field full">
-            <label htmlFor="by">Need to be there by</label>
-            <input id="by" type="time" value={arriveBy} onChange={(e) => setArriveBy(e.target.value)} />
+            <label>Need to be there by</label>
+            <TimePicker value={arriveBy} onChange={setArriveBy} />
           </div>
           <button className="go" type="submit" disabled={loading}>
-            {loading ? 'Working it out…' : 'Find my best way'}
+            {loading ? 'Working it out…' : 'Find my best option'}
           </button>
         </div>
       </form>
@@ -150,64 +229,104 @@ export default function Home() {
 
         return (
           <>
-            <div className={`verdict ${result.verdict.tone}`}>{result.verdict.line}</div>
+            <div className={`yourcall ${result.verdict.tone}`}>
+              <div className="yc-lab">{result.verdict.tone === 'tradeoff' ? 'Your call' : 'The pick'}</div>
+              <p className="yc-line">{result.verdict.line}</p>
+            </div>
             {willMiss && (
               <div className="heads">
                 Too late to arrive by {target}. Leave now and the fastest option gets you there ~{clock(fastArr)}
                 {missLate > 0 ? `, about ${missLate} min late` : ''}.
               </div>
             )}
-            <p className="route-line">{result.origin} &nbsp;→&nbsp; {result.destination} · ~{result.roadKm.toFixed(1)} km by road</p>
+            <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
+            {result.rain && result.rain.raining && (
+              <div className="rain">🌧 Raining at pickup. Cab and auto are running higher{result.rain.heavy ? ' (heavy rain)' : ''}. The range leans up to match.</div>
+            )}
+            {!result.options.some((o) => o.key === 'metro') && !result.metroClosed && (
+              <div className="nometro">🚇 No metro for this trip. There's no line that connects these two ends, so it's auto vs cab.</div>
+            )}
+            {result.roadKm >= 18 && (
+              <div className="nometro">🛺 Long trip: app autos get demand-priced on routes this long, so the real fare can swing beyond this range, up or down.</div>
+            )}
             <div className="cards">
-              {result.options.map((o) => {
-                const li = leaveInfo(o.min);
-                return (
-                  <div key={o.key} className={`card${o.isCheapest ? ' cheapest' : ''}${o.isFastest ? ' fastest' : ''}`}>
-                    <div className="card-top">
-                      <div className="mode">{o.mode}</div>
-                      <div className="flags">
-                        {o.isCheapest && <span className="flag cheap">cheapest</span>}
-                        {o.isFastest && <span className="flag fast">fastest</span>}
+              {(() => {
+                const SHORT = { metro: 'the metro', auto: 'the auto', cab: 'the cab' };
+                const order = [];
+                const seen = new Set();
+                [result.cheapest, result.fastest, ...result.options].forEach((o) => {
+                  if (o && !seen.has(o.key)) { seen.add(o.key); order.push(o); }
+                });
+                return order.map((o) => {
+                  const li = leaveInfo(o.min);
+                  let cmp = null;
+                  if (o.vsCheapest) {
+                    const { costDelta, minDelta } = o.vsCheapest;
+                    const money = costDelta > 0
+                      ? <><b>₹{costDelta} more</b> than {SHORT[result.cheapest.key]}</>
+                      : <>about the same price as {SHORT[result.cheapest.key]}</>;
+                    const time = minDelta > 0
+                      ? <>, but <b>{minDelta} min sooner</b></>
+                      : minDelta < 0
+                        ? <>, and <b>{-minDelta} min slower</b></>
+                        : <>, same time</>;
+                    cmp = <div className="cmp">{money}{time}.</div>;
+                  }
+                  return (
+                    <div key={o.key} className={`card${o.isCheapest ? ' cheapest' : ''}${o.isFastest ? ' fastest' : ''}`}>
+                      <div className="card-top">
+                        <div className="mode">{o.mode}</div>
+                        <div className="flags">
+                          {o.isCheapest && <span className="flag cheap">cheapest</span>}
+                          {o.isFastest && <span className="flag fast">fastest</span>}
+                          {!o.isCheapest && !o.isFastest && <span className="flag alt">alternative</span>}
+                        </div>
+                      </div>
+                      <div className="metrics">
+                        <div className="metric"><div className="n">₹{o.cost}{o.costHigh ? `–${o.costHigh}` : ''}</div><div className="k">{o.costExact ? 'fare' : 'fare (est.)'}</div></div>
+                        <div className="metric"><div className="n">{o.min}<small> min</small></div><div className="k">door to door</div></div>
+                        {li.onTime
+                          ? <div className="metric"><div className="n leave">{li.t}</div><div className="k">leave by</div></div>
+                          : <div className="metric"><div className="n late">leave now</div><div className="k">reach ~{li.t}{li.late > 0 ? ` · ${li.late}m late` : ''}</div></div>}
+                      </div>
+                      {cmp}
+                      {o.fareBreakdown && <div className="breakdown"><b>₹{o.fareBreakdown.metro}</b> metro + <b>₹{o.fareBreakdown.autos}{o.fareBreakdown.autosHigh ? `–${o.fareBreakdown.autosHigh}` : ''}</b> autos <span className="km">(est.)</span></div>}
+                      <div className="steps">
+                        {o.steps.map((s, i) => (
+                          <div key={i} className={`step ${s.mode}`}>
+                            <span className="ic">{ICON[s.mode]}</span>
+                            {s.mode === 'metro'
+                              ? <span><span className="line-pill" style={lineStyle(s.line)}>{s.line}</span> {s.board} → {s.alight} <span className="km">· {s.km.toFixed(1)} km</span></span>
+                              : <span>{s.text}</span>}
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="metrics">
-                      <div className="metric"><div className="n">₹{o.cost}</div><div className="k">{o.costExact ? 'fare' : 'fare (est.)'}</div></div>
-                      <div className="metric"><div className="n">{o.min}<small> min</small></div><div className="k">door to door</div></div>
-                      {li.onTime
-                        ? <div className="metric"><div className="n leave">{li.t}</div><div className="k">leave by</div></div>
-                        : <div className="metric"><div className="n late">leave now</div><div className="k">reach ~{li.t}{li.late > 0 ? ` · ${li.late}m late` : ''}</div></div>}
-                    </div>
-                    <div className="steps">
-                      {o.steps.map((s, i) => (
-                        <div key={i} className={`step ${s.mode}`}><span className="ic">{ICON[s.mode]}</span><span>{s.text}</span></div>
-                      ))}
-                    </div>
-                    {o.note && <div className="est">{o.note}.</div>}
-                    {o.key === 'cab' && <div className="est">Cab fare is an estimate — live Uber/Ola surge can push it higher.</div>}
-                  </div>
-                );
-              })}
+                  );
+                });
+              })()}
             </div>
+            <p className="tagline">FareWise does the maths. <b>You make the call.</b></p>
+            <a className="maps-cta" target="_blank" rel="noopener noreferrer"
+              href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(result.origin)}&destination=${encodeURIComponent(result.destination)}`}>
+              Picked one? Get directions in Google Maps ↗
+            </a>
           </>
         );
       })()}
 
-      <details>
-        <summary>Fares used (tweak if yours differ)</summary>
-        <div className="assume">
-          <div className="arow"><span>Auto base<small>first 2 km · official ₹36</small></span><input type="number" value={rates.autoBase} onChange={setRate('autoBase')} /></div>
-          <div className="arow"><span>Auto per km<small>after 2 km · official ₹18</small></span><input type="number" value={rates.autoPerKm} onChange={setRate('autoPerKm')} /></div>
-          <div className="arow"><span>Cab base<small>booking + first km</small></span><input type="number" value={rates.cabBase} onChange={setRate('cabBase')} /></div>
-          <div className="arow"><span>Cab per km</span><input type="number" value={rates.cabPerKm} onChange={setRate('cabPerKm')} /></div>
-          <div className="arow"><span>Cab minimum fare</span><input type="number" value={rates.cabMinFare} onChange={setRate('cabMinFare')} /></div>
-        </div>
-      </details>
-
       <p className="foot">
-        <b>Times use live Google traffic.</b> Auto and metro fares use official Bangalore rates (autos add a 1.5× night
-        surcharge, 10pm–5am); the cab fare is an estimate with a rough rush-hour bump, since live Uber/Ola surge isn't
-        public. This decides and plans — for turn-by-turn, open the leg in Google Maps.
-        <span style={{ opacity: 0.45 }}> · build: shortest-route-fix</span>
+        <b>Times use live Google traffic.</b> Metro fares are exact. Cab and auto show a range: the low end is a normal
+        fare, the high end covers busy times, nights and rain. Live app surge isn't public, so the high number is a
+        guess, not a promise.
+      </p>
+
+      <p className="fineprint">Not affiliated with anyone. Numbers are best educated guesses.</p>
+      <p className="spite">
+        A spite-fueled weekend build by <b className="name">Anvita</b> ·{' '}
+        <a href="https://www.linkedin.com/in/anvitakodru/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        {' · '}
+        <a href="https://x.com/vitamaybe" target="_blank" rel="noopener noreferrer">X</a>
       </p>
     </main>
   );
