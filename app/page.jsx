@@ -236,7 +236,7 @@ export default function Home() {
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
             {(() => {
               const notes = [];
-              if (willMiss) notes.push({ tone: 'warn', lead: `~${missLate} min late.`, text: `Fastest is ${({ metro: 'the metro', auto: 'the auto', cab: 'the cab' })[result.fastest.key]}, reach by ~${clock(fastArr)}.` });
+              if (willMiss) notes.push({ tone: 'warn', lead: `Can't make ${target}.`, text: `Fastest is ${({ metro: 'the metro', auto: 'the auto', cab: 'the cab' })[result.fastest.key]}, reach by ~${clock(fastArr)} (${missLate} min late).` });
               if (result.ahead) notes.push({ tone: 'plan', lead: `For ${result.ahead === 'tomorrow' ? 'tomorrow' : 'later today'}, ${target}.`, text: 'Usual traffic, not live.' });
               if (result.rain && result.rain.raining) notes.push({ tone: 'rain', lead: `${result.rain.heavy ? 'Heavy rain' : 'Raining'}.`, text: 'Cab and auto may cost more.' });
               if (!result.options.some((o) => o.key === 'metro') && !result.metroClosed) notes.push({ lead: 'No metro', text: 'on this route.' });
