@@ -233,25 +233,20 @@ export default function Home() {
               <div className="yc-lab">{result.verdict.tone === 'tradeoff' ? 'Your call' : 'The pick'}</div>
               <p className="yc-line">{result.verdict.line.split('**').map((part, i) => (i % 2 ? <span key={i} className="hl">{part}</span> : part))}</p>
             </div>
-            {willMiss && (
-              <div className="heads">
-                Too late to arrive by {target}. Leave now and the fastest option gets you there ~{clock(fastArr)}
-                {missLate > 0 ? `, about ${missLate} min late` : ''}.
-              </div>
-            )}
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
-            {result.ahead && (
-              <div className="nometro">📅 Planning for {result.ahead === 'tomorrow' ? 'tomorrow' : 'later today'}, {clock(result.arriveBy)}. Times use usual traffic for then, not live, and skip today's weather.</div>
-            )}
-            {result.rain && result.rain.raining && (
-              <div className="rain">🌧 Raining at pickup. Cab and auto are running higher{result.rain.heavy ? ' (heavy rain)' : ''}. The range leans up to match.</div>
-            )}
-            {!result.options.some((o) => o.key === 'metro') && !result.metroClosed && (
-              <div className="nometro">🚇 No metro for this trip. There's no line that connects these two ends, so it's auto vs cab.</div>
-            )}
-            {result.roadKm >= 18 && (
-              <div className="nometro">🛺 Long trip: app autos get demand-priced on routes this long, so the real fare can swing beyond this range, up or down.</div>
-            )}
+            {(() => {
+              const notes = [];
+              if (willMiss) notes.push({ tone: 'warn', lead: `You'll be ~${missLate} min late.`, text: `${target} can't be made. Leave now and the fastest option gets you there ~${clock(fastArr)}.` });
+              if (result.ahead) notes.push({ tone: 'plan', lead: `Planning for ${result.ahead === 'tomorrow' ? 'tomorrow' : 'later today'}, ${target}.`, text: "Times use usual traffic for then, not live, and skip today's weather." });
+              if (result.rain && result.rain.raining) notes.push({ tone: 'rain', lead: `Raining at pickup${result.rain.heavy ? ' (heavy)' : ''}.`, text: 'Cab and auto fares can run higher, so the ranges lean up.' });
+              if (!result.options.some((o) => o.key === 'metro') && !result.metroClosed) notes.push({ lead: 'No metro for this trip.', text: "No line connects these two ends, so it's auto vs cab." });
+              if (result.roadKm >= 18) notes.push({ lead: 'Long trip.', text: 'App autos get demand-priced this far, so the fare can swing either way.' });
+              return notes.length > 0 && (
+                <div className="notes">
+                  {notes.map((n, i) => <div key={i} className={`note${n.tone ? ' ' + n.tone : ''}`}><b>{n.lead}</b> {n.text}</div>)}
+                </div>
+              );
+            })()}
             <div className="cards">
               {(() => {
                 const SHORT = { metro: 'the metro', auto: 'the auto', cab: 'the cab' };

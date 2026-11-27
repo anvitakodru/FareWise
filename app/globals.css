@@ -99,6 +99,12 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .cmp{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:.86rem;color:var(--muted2);line-height:1.5}
 .cmp b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
 .cmp ~ .steps{border-top:0;padding-top:0;margin-top:10px}
+.notes{margin:0 0 16px;padding:12px 14px;background:var(--surface-2);border-radius:12px;display:flex;flex-direction:column;gap:7px}
+.note{font-size:.86rem;color:var(--muted2);line-height:1.45}
+.note b{color:var(--fg);font-weight:600}
+.note.warn b{color:var(--fast)}
+.note.rain b{color:var(--speed)}
+.note.plan b{color:var(--accent)}
 .yc-line .hl{color:var(--accent)}
 .yourcall.skip-metro .yc-line .hl{color:var(--fast)}
 .tagline{text-align:center;color:var(--muted);font-size:.82rem;margin:16px 0 0}
