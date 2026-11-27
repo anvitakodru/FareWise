@@ -35,8 +35,10 @@ export async function POST(req) {
 
   try {
     const trip = await resolveTrip({ origin, originPlaceId, destination, destPlaceId }, arriveByUnix, key);
-    // Rain is today's weather at pickup; it says nothing about tomorrow's trip.
-    if (tomorrow) trip.rain = null;
+    // Live rain and live traffic only mean something for a trip starting soon.
+    // Arriving more than 3h from now = planning ahead: drop today's rain, flag it.
+    const ahead = arriveByUnix - Math.floor(Date.now() / 1000) > 3 * 3600;
+    if (ahead) trip.rain = null;
     const result = buildPlans(trip, rates || {}, hour, day);
     return NextResponse.json({
       origin: trip.originText,
@@ -44,7 +46,7 @@ export async function POST(req) {
       roadKm: trip.driving.km,
       arriveBy: arriveByUnix,
       rain: trip.rain || null,
-      tomorrow,
+      ahead: ahead ? (tomorrow ? 'tomorrow' : 'later') : null,
       ...result,
     });
   } catch (e) {
