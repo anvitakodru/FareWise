@@ -231,7 +231,7 @@ export default function Home() {
           <>
             <div className={`yourcall ${result.verdict.tone}`}>
               <div className="yc-lab">{result.verdict.tone === 'tradeoff' ? 'Your call' : 'The pick'}</div>
-              <p className="yc-line">{result.verdict.line}</p>
+              <p className="yc-line">{result.verdict.line.split('**').map((part, i) => (i % 2 ? <span key={i} className="hl">{part}</span> : part))}</p>
             </div>
             {willMiss && (
               <div className="heads">

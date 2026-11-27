@@ -98,6 +98,9 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .flag.alt{color:var(--muted);background:var(--surface-2)}
 .cmp{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:.86rem;color:var(--muted2);line-height:1.5}
 .cmp b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+.cmp ~ .steps{border-top:0;padding-top:0;margin-top:10px}
+.yc-line .hl{color:var(--accent)}
+.yourcall.skip-metro .yc-line .hl{color:var(--fast)}
 .tagline{text-align:center;color:var(--muted);font-size:.82rem;margin:16px 0 0}
 .tagline b{color:var(--fg);font-weight:600}
 .est.surge-note{color:var(--fast)}
