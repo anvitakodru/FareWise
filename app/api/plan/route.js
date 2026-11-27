@@ -28,7 +28,10 @@ export async function POST(req) {
   }
 
   // Next occurrence of HH:MM in IST (the app is Bangalore-only).
-  const { unix: arriveByUnix, hour, day } = nextTimeIST(arriveBy || '09:00');
+  const { unix: arriveByUnix, hour, day, passed } = nextTimeIST(arriveBy || '09:00');
+  if (passed) {
+    return NextResponse.json({ error: "That time's already gone. Pick a time later than now." }, { status: 400 });
+  }
 
   try {
     const trip = await resolveTrip({ origin, originPlaceId, destination, destPlaceId }, arriveByUnix, key);
@@ -54,9 +57,10 @@ function nextTimeIST(hhmm) {
   const istNow = new Date(Date.now() + IST);     // a Date whose UTC fields read as IST
   const target = new Date(istNow);
   target.setUTCHours(h, m, 0, 0);
-  // If the time only just passed (within 2h), keep it today so the app shows the
-  // "leave now, you're late" state instead of silently jumping to tomorrow.
+  // More than 2h in the past means the next day (at 11pm, "9:00 AM" = tomorrow).
+  // Anything that passed within the last 2h is a time that's already gone: flag it.
   if (target.getTime() <= istNow.getTime() - 2 * 3600 * 1000) target.setUTCDate(target.getUTCDate() + 1);
+  const passed = target.getTime() < istNow.getTime();
   // getUTCDay on this IST-shifted date gives the IST weekday (0=Sun … 6=Sat).
-  return { unix: Math.floor((target.getTime() - IST) / 1000), hour: h, day: target.getUTCDay() };
+  return { unix: Math.floor((target.getTime() - IST) / 1000), hour: h, day: target.getUTCDay(), passed };
 }
