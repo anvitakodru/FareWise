@@ -239,6 +239,7 @@ export default function Home() {
               if (willMiss) notes.push({ tone: 'warn', lead: `Can't make ${target}.`, text: `Fastest is ${({ metro: 'the metro', auto: 'the auto', cab: 'the cab' })[result.fastest.key]}, reach by ~${clock(fastArr)} (${missLate} min late).` });
               if (result.ahead) notes.push({ tone: 'plan', lead: `For ${result.ahead === 'tomorrow' ? 'tomorrow' : 'later today'}, ${target}.`, text: 'Usual traffic, not live.' });
               if (result.rain && result.rain.raining) notes.push({ tone: 'rain', lead: `${result.rain.heavy ? 'Heavy rain' : 'Raining'}.`, text: 'Cab and auto may cost more.' });
+              if (result.metroClosed) notes.push({ lead: "Metro's shut", text: 'at this hour.' });
               if (!result.options.some((o) => o.key === 'metro') && !result.metroClosed) notes.push({ lead: 'No metro', text: 'on this route.' });
               if (result.roadKm >= 18) notes.push({ lead: 'Long trip.', text: 'Auto fare can swing.' });
               return notes.length > 0 && (
