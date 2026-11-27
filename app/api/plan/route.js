@@ -28,13 +28,15 @@ export async function POST(req) {
   }
 
   // Next occurrence of HH:MM in IST (the app is Bangalore-only).
-  const { unix: arriveByUnix, hour, day, passed } = nextTimeIST(arriveBy || '09:00');
+  const { unix: arriveByUnix, hour, day, passed, tomorrow } = nextTimeIST(arriveBy || '09:00');
   if (passed) {
     return NextResponse.json({ error: "That time's already gone. Pick a time later than now." }, { status: 400 });
   }
 
   try {
     const trip = await resolveTrip({ origin, originPlaceId, destination, destPlaceId }, arriveByUnix, key);
+    // Rain is today's weather at pickup; it says nothing about tomorrow's trip.
+    if (tomorrow) trip.rain = null;
     const result = buildPlans(trip, rates || {}, hour, day);
     return NextResponse.json({
       origin: trip.originText,
@@ -42,6 +44,7 @@ export async function POST(req) {
       roadKm: trip.driving.km,
       arriveBy: arriveByUnix,
       rain: trip.rain || null,
+      tomorrow,
       ...result,
     });
   } catch (e) {
@@ -59,8 +62,9 @@ function nextTimeIST(hhmm) {
   target.setUTCHours(h, m, 0, 0);
   // More than 2h in the past means the next day (at 11pm, "9:00 AM" = tomorrow).
   // Anything that passed within the last 2h is a time that's already gone: flag it.
-  if (target.getTime() <= istNow.getTime() - 2 * 3600 * 1000) target.setUTCDate(target.getUTCDate() + 1);
+  const tomorrow = target.getTime() <= istNow.getTime() - 2 * 3600 * 1000;
+  if (tomorrow) target.setUTCDate(target.getUTCDate() + 1);
   const passed = target.getTime() < istNow.getTime();
   // getUTCDay on this IST-shifted date gives the IST weekday (0=Sun … 6=Sat).
-  return { unix: Math.floor((target.getTime() - IST) / 1000), hour: h, day: target.getUTCDay(), passed };
+  return { unix: Math.floor((target.getTime() - IST) / 1000), hour: h, day: target.getUTCDay(), passed, tomorrow };
 }

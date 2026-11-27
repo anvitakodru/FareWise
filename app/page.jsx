@@ -240,6 +240,9 @@ export default function Home() {
               </div>
             )}
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
+            {result.tomorrow && (
+              <div className="nometro">📅 Planning for tomorrow, {clock(result.arriveBy)}. Times use usual traffic for then, not live.</div>
+            )}
             {result.rain && result.rain.raining && (
               <div className="rain">🌧 Raining at pickup. Cab and auto are running higher{result.rain.heavy ? ' (heavy rain)' : ''}. The range leans up to match.</div>
             )}
