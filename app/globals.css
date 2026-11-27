@@ -96,19 +96,22 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .flag.fast{color:var(--speed);background:var(--speed-bg)}
 .flag.surge{color:var(--fast);background:var(--fast-bg)}
 .flag.alt{color:var(--muted);background:var(--surface-2)}
-.cmp{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:.86rem;color:var(--muted2);line-height:1.5}
-.cmp b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+.cmp{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.cmp .vs{font-size:.8rem;color:var(--muted);margin-right:2px}
+.pill{font-size:.8rem;font-weight:600;color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.good{color:var(--speed);border-color:color-mix(in srgb, var(--speed) 45%, transparent)}
+.pill.bad{color:var(--fast);border-color:color-mix(in srgb, var(--fast) 45%, transparent)}
 .cmp ~ .steps{border-top:0;padding-top:0;margin-top:10px}
 .notes{margin:0 0 16px;padding:12px 14px;background:var(--surface-2);border-radius:12px;display:flex;flex-direction:column;gap:7px}
 .note{font-size:.86rem;color:var(--muted2);line-height:1.45}
 .note b{color:var(--fg);font-weight:600}
-.note.warn b{color:var(--fast)}
-.note.rain b{color:var(--speed)}
-.note.plan b{color:var(--accent)}
+.note.n-warn b{color:var(--fast)}
+.note.n-rain b{color:var(--speed)}
+.note.n-plan b{color:var(--accent)}
 .yc-line .hl{color:var(--accent)}
 .yourcall.skip-metro .yc-line .hl{color:var(--fast)}
 .tagline{text-align:center;color:var(--muted);font-size:.82rem;margin:16px 0 0}
-.tagline b{color:var(--fg);font-weight:600}
+.tagline b{color:var(--accent);font-weight:600}
 .est.surge-note{color:var(--fast)}
 .metrics{display:flex;gap:22px;margin-top:12px;flex-wrap:wrap}
 .metric .n{font-family:var(--m);font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}

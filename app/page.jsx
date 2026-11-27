@@ -236,14 +236,14 @@ export default function Home() {
             <p className="route-line">~{result.roadKm.toFixed(1)} km by road</p>
             {(() => {
               const notes = [];
-              if (willMiss) notes.push({ tone: 'warn', lead: `You'll be ~${missLate} min late.`, text: `${target} can't be made. Leave now and the fastest option gets you there ~${clock(fastArr)}.` });
-              if (result.ahead) notes.push({ tone: 'plan', lead: `Planning for ${result.ahead === 'tomorrow' ? 'tomorrow' : 'later today'}, ${target}.`, text: "Times use usual traffic for then, not live, and skip today's weather." });
-              if (result.rain && result.rain.raining) notes.push({ tone: 'rain', lead: `Raining at pickup${result.rain.heavy ? ' (heavy)' : ''}.`, text: 'Cab and auto fares can run higher, so the ranges lean up.' });
-              if (!result.options.some((o) => o.key === 'metro') && !result.metroClosed) notes.push({ lead: 'No metro for this trip.', text: "No line connects these two ends, so it's auto vs cab." });
-              if (result.roadKm >= 18) notes.push({ lead: 'Long trip.', text: 'App autos get demand-priced this far, so the fare can swing either way.' });
+              if (willMiss) notes.push({ tone: 'warn', lead: `~${missLate} min late.`, text: `Fastest is ${({ metro: 'the metro', auto: 'the auto', cab: 'the cab' })[result.fastest.key]}, reach by ~${clock(fastArr)}.` });
+              if (result.ahead) notes.push({ tone: 'plan', lead: `For ${result.ahead === 'tomorrow' ? 'tomorrow' : 'later today'}, ${target}.`, text: 'Usual traffic, not live.' });
+              if (result.rain && result.rain.raining) notes.push({ tone: 'rain', lead: `${result.rain.heavy ? 'Heavy rain' : 'Raining'}.`, text: 'Cab and auto may cost more.' });
+              if (!result.options.some((o) => o.key === 'metro') && !result.metroClosed) notes.push({ lead: 'No metro', text: 'on this route.' });
+              if (result.roadKm >= 18) notes.push({ lead: 'Long trip.', text: 'Auto fare can swing.' });
               return notes.length > 0 && (
                 <div className="notes">
-                  {notes.map((n, i) => <div key={i} className={`note${n.tone ? ' ' + n.tone : ''}`}><b>{n.lead}</b> {n.text}</div>)}
+                  {notes.map((n, i) => <div key={i} className={`note${n.tone ? ' n-' + n.tone : ''}`}><b>{n.lead}</b> {n.text}</div>)}
                 </div>
               );
             })()}
@@ -260,15 +260,15 @@ export default function Home() {
                   let cmp = null;
                   if (o.vsCheapest) {
                     const { costDelta, minDelta } = o.vsCheapest;
-                    const money = costDelta > 0
-                      ? <><b>₹{costDelta} more</b> than {SHORT[result.cheapest.key]}</>
-                      : <>about the same price as {SHORT[result.cheapest.key]}</>;
-                    const time = minDelta > 0
-                      ? <>, but <b>{minDelta} min sooner</b></>
-                      : minDelta < 0
-                        ? <>, and <b>{-minDelta} min slower</b></>
-                        : <>, same time</>;
-                    cmp = <div className="cmp">{money}{time}.</div>;
+                    cmp = (
+                      <div className="cmp">
+                        <span className="vs">vs {SHORT[result.cheapest.key]}</span>
+                        <span className="pill">{costDelta > 0 ? `₹${costDelta} more` : 'same price'}</span>
+                        <span className={`pill${minDelta > 0 ? ' good' : minDelta < 0 ? ' bad' : ''}`}>
+                          {minDelta > 0 ? `${minDelta} min sooner` : minDelta < 0 ? `${-minDelta} min slower` : 'same time'}
+                        </span>
+                      </div>
+                    );
                   }
                   return (
                     <div key={o.key} className={`card${o.isCheapest ? ' cheapest' : ''}${o.isFastest ? ' fastest' : ''}`}>
@@ -314,9 +314,8 @@ export default function Home() {
       })()}
 
       <p className="foot">
-        <b>Times use live Google traffic.</b> Metro fares are exact. Cab and auto show a range: the low end is a normal
-        fare, the high end covers busy times, nights and rain. Live app surge isn't public, so the high number is a
-        guess, not a promise.
+        <b>Live Google traffic.</b> Metro fares are exact. Cab and auto show normal fare to busy-time high.
+        Surge isn't public, so the top end is a guess.
       </p>
 
       <p className="fineprint">Not affiliated with anyone. Numbers are best educated guesses.</p>
